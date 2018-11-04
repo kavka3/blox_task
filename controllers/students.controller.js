@@ -12,8 +12,21 @@ controller.getAll = async (req, res) => {
         res.send(students);
     }
     catch (err) {
-        logger.error('Error in getting students- ' + err);
+        logger.error(`Error in getting students- ${err}`);
         res.send('Got error in getAll');
+    }
+}
+
+controller.getById = async (req, res) => {
+    const studentId = req.params.id;
+    try {
+        const student = await Student.findById(studentId)
+        logger.info(`Get student by id: ${studentId}`);
+        res.send(student);
+    }
+    catch (err) {
+        logger.error('Error in getting student- ' + err);
+        res.send('Got error in getById');
     }
 }
 
@@ -24,33 +37,51 @@ controller.addStudent = async (req, res) => {
     try {
         const savedStudent = await Student.addStudent(studentToAdd);
         logger.info('Adding student...');
-        res.send('added: ' + savedStudent);
+        res.send(savedStudent);
     }
     catch (err) {
-        logger.error('Error in adding student- ' + err);
+        logger.error(`Error in adding student- ${err}`);
         res.send('Got error in addStudent');
     }
 }
 
-controller.deleteStudent = async (req, res) => {
-    let studentId = req.body._id;
+controller.updateStudent = async (req, res) => {
+    const studentId = req.params.id;
     try {
-        if (!mongoose.Types.ObjectId.isValid(studentId)) {
-            logger.info(`provided id:${studentId} not valid ObjectId`);
-            res.send('Not Valid ObjectId');
+
+        const findStudent = await Student.getById(studentId);
+
+        if (!findStudent) {
+            logger.info(`Student with id:${studentId} not found`);
+            res.send('Student not found');
         }
         else {
-            const findStudent = await Student.getById(studentId);
+            Object.assign(findStudent, req.body);
+            await findStudent.save();
+            logger.info(`Update Student- ${findStudent}`);
+            res.send('Student successfully updated');
+        }
+    }
+    catch (err) {
+        logger.error(`Failed to update student- ${err}`);
+        res.send('Got error in updateStudent');
+    }
+}
 
-            if (!findStudent) {
-                logger.info(`Student with id:${studentId} not found`);
-                res.send('Student not found');
-            }
-            else {
-                const removedStudent = await Student.removeStudent(studentId);
-                logger.info('Deleted Student- ' + removedStudent);
-                res.send('Student successfully deleted');
-            }
+controller.deleteStudent = async (req, res) => {
+    const studentId = req.params.id;
+    try {
+
+        const findStudent = await Student.getById(studentId);
+
+        if (!findStudent) {
+            logger.info(`Student with id:${studentId} not found`);
+            res.send('Student not found');
+        }
+        else {
+            const removedStudent = await Student.removeStudent(studentId);
+            logger.info(`Deleted Student- ${removedStudent}`);
+            res.send('Student successfully deleted');
         }
     }
     catch (err) {
@@ -60,67 +91,64 @@ controller.deleteStudent = async (req, res) => {
 }
 
 controller.assignCourse = async (req, res) => {
-    let studentId = req.body.studentId;
-    let courseId = req.body.courseId;
-
+    const studentId = req.body.studentId;
+    const courseId = req.body.courseId;
     try {
-        if (!mongoose.Types.ObjectId.isValid(studentId)) {
-            logger.info(`provided id:${studentId} not valid ObjectId`);
-            res.send('Not Valid ObjectId');
+        const findStudent = await Student.getById(studentId);
+        if (!findStudent) {
+            logger.info(`Student with id:${studentId} not found`);
+            res.send('Student not found');
         }
-        else {
-            const findStudent = await Student.getById(studentId);
 
-            if (!findStudent) {
-                logger.info(`Student with id:${studentId} not found`);
-                res.send('Student not found');
-            }
-            else {
-
-                logger.info(studentId);
-
-                const findCourse = await Course.getById(courseId);
-                if (!findCourse) {
-                    logger.info(`Course with id:${courseId} not found`);
-                    res.send('Course not found');
-                }
-                else {
-                    findStudent.courses.push({
-                        courseId: findCourse._id
-                    })
-                    findStudent.save();
-                    res.send('added: ' + findStudent);
-                }
-            }
+        const findCourse = await Course.getById(courseId);
+        if (!findCourse) {
+            logger.info(`Course with id:${courseId} not found`);
+            res.send('Course not found');
         }
+
+        findStudent.courses.push({
+            courseId: findCourse._id
+        })
+        await findStudent.save();
+        res.send(findStudent);
     }
     catch (err) {
-        logger.error('Failed to delete student- ' + err);
+        logger.error(`Failed to assign course- ${err}`);
         res.send('Got error in assignCourse');
     }
 }
 
 controller.assignScore = async (req, res) => {
-
-    let studentId = req.body.studentId;
-    let courseId = req.body.courseId;
-    let score = req.body.score;
-
+    const studentId = req.body.studentId;
+    const courseId = req.body.courseId;
+    const score = req.body.score;
     try {
-        if (!mongoose.Types.ObjectId.isValid(studentId)) {
-            logger.info(`provided id:${studentId} not valid ObjectId`);
-            res.send('Not Valid ObjectId');
-        }
-        else {
-            await Student.update({ "_id": studentId, "courses.courseId": new mongoose.Types.ObjectId(courseId) },
-                { $set: { "courses.$.score": score } })
 
-            res.send('added: ');
+        if (!score) {
+            logger.info(`Score undefined`);
+            res.send('Score undefined');
         }
+
+        const findStudent = await Student.getById(studentId);
+        if (!findStudent) {
+            logger.info(`Student with id:${studentId} not found`);
+            res.send('Student not found');
+        }
+
+        const findCourse = await Course.getById(courseId);
+        if (!findCourse) {
+            logger.info(`Course with id:${courseId} not found`);
+            res.send('Course not found');
+        }
+
+        await Student.update({ "_id": studentId, "courses.courseId": new mongoose.Types.ObjectId(courseId) },
+            { $set: { "courses.$.score": Math.trunc(score) } })
+
+        res.send(`added score: ${score} to courseId: ${courseId}`);
     }
     catch (err) {
-        logger.error('Failed to delete student- ' + err);
-        res.send('Got error in assignCourse');
+        logger.error(`Failed to assign score- ${err}`);
+        res.send('Got error in assignScore');
     }
 }
 
@@ -139,6 +167,8 @@ controller.outstanding = async (req, res) => {
                 countEndedCorses += course.score ? 1 : 0;
             });
 
+            logger.info(`sumscore: ${sumScore}, countEndedCorses: ${countEndedCorses}`);
+
             const avg = countEndedCorses != 0 ? sumScore / countEndedCorses : 0;
 
             if (avg >= 90) {
@@ -149,12 +179,11 @@ controller.outstanding = async (req, res) => {
             }
         });
 
-        logger.info('sending all students...');
         res.send(outstanding);
     }
     catch (err) {
-        logger.error('Error in getting students- ' + err);
-        res.send('Got error in getAll');
+        logger.error(`Error in outstanding- ${err}`);
+        res.send('Got error in outstanding');
     }
 }
 
