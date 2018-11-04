@@ -139,7 +139,7 @@ controller.outstanding = async (req, res) => {
                 countEndedCorses += course.score ? 1 : 0;
             });
 
-            const avg = sumScore / countEndedCorses;
+            const avg = countEndedCorses != 0 ? sumScore / countEndedCorses : 0;
 
             if (avg >= 90) {
                 outstanding.push({
