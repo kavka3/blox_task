@@ -9,7 +9,7 @@ const connectToDb = async () => {
     let dbPort = config.dbPort;
     let dbName = config.dbName;
     try {
-        await Mongoose.connect(`mongodb://${dbHost}:${dbPort}/${dbName}`, { useMongoClient: true });
+        await Mongoose.connect(`mongodb://${dbHost}:${dbPort}/${dbName}`, { useNewUrlParser: true });
         logger.info('Connected to mongo!!!');
     }
     catch (err) {
