@@ -39,6 +39,7 @@ POST http://localhost:3000/students/mokedata
 ```
 
 + Create student
+
 --name required
 ```
 POST http://localhost:3000/students
@@ -65,6 +66,7 @@ DELETE http://localhost:3000/students/{id}
 ```
 
 + Create course
+
 --name required
 ```
 POST http://localhost:3000/courses
@@ -91,14 +93,18 @@ DELETE http://localhost:3000/courses/{id}
 ```
 
 + Assign student to course
+
 --studentId required
+
 --courseId required
 ```
 POST http://localhost:3000/students/assigncourse
 ```
 
 + Assign score to course
+
 --studentId required
+
 --courseId required
 ```
 POST http://localhost:3000/students/assignscore
