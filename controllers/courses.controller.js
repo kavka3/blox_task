@@ -1,6 +1,5 @@
 import Course from '../models/courses.model'
 import logger from '../core/logger/app-logger'
-import mongoose from 'mongoose';
 
 const controller = {};
 
