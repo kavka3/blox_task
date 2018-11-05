@@ -124,12 +124,7 @@ controller.assignScore = async (req, res) => {
     const score = req.body.score;
     try {
 
-        if (isNaN(Math.trunc(score))) {
-            logger.info(`Score is not a number`);
-            res.send('Score is not a number');
-        }
-
-        if (!score && !isNaN(Math.trunc(score))) {
+        if (!score || isNaN(Math.trunc(score))) {
             logger.info(`Score undefined`);
             res.send('Score undefined');
         }
