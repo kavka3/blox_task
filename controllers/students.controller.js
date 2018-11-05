@@ -94,23 +94,27 @@ controller.assignCourse = async (req, res) => {
     const studentId = req.body.studentId;
     const courseId = req.body.courseId;
     try {
+
         const findStudent = await Student.getById(studentId);
-        if (!findStudent) {
+        if (!findStudent)
             logger.info(`Student with id:${studentId} not found`);
-            res.send('Student not found');
-        }
 
         const findCourse = await Course.getById(courseId);
-        if (!findCourse) {
+        if (!findCourse)
             logger.info(`Course with id:${courseId} not found`);
-            res.send('Course not found');
+
+        try {
+            const updatedStudent = await Student.findOneAndUpdate({ _id: findStudent._id },
+                { $push: { courses: { courseId: findCourse._id } } },
+                { new: true });
+
+            res.send(updatedStudent);
+        }
+        catch (err) {
+            logger.error(`Failed to assign course- ${err}`);
+            res.send('Got error in assignCourse');
         }
 
-        findStudent.courses.push({
-            courseId: findCourse._id
-        })
-        await findStudent.save();
-        res.send(findStudent);
     }
     catch (err) {
         logger.error(`Failed to assign course- ${err}`);
@@ -122,8 +126,17 @@ controller.assignScore = async (req, res) => {
     const studentId = req.body.studentId;
     const courseId = req.body.courseId;
     const score = req.body.score;
+
+    const findStudent = await Student.getById(studentId);
+    if (!findStudent)
+        logger.info(`Student with id:${studentId} not found`);
+
+    const findCourse = await Course.getById(courseId);
+    if (!findCourse)
+        logger.info(`Course with id:${courseId} not found`);
+
     try {
-        const updatedStudent = await Student.findOneAndUpdate({ _id: studentId, "courses.courseId": mongoose.Types.ObjectId(courseId) },
+        const updatedStudent = await Student.findOneAndUpdate({ _id: findStudent._id, "courses.courseId": findCourse._id },
             { $set: { "courses.$.score": score } },
             { new: true });
 
