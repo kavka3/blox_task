@@ -1,6 +1,7 @@
 import Student from '../models/students.model'
 import Course from '../models/courses.model'
 import logger from '../core/logger/app-logger'
+import mongoose from 'mongoose';
 
 const controller = {};
 
@@ -152,6 +153,12 @@ controller.outstanding = async (req, res) => {
 
 controller.mokeData = async (req, res) => {
     try {
+
+        const collections = await mongoose.connection.db.collections();
+
+        for (let collection of collections) {
+            await collection.deleteOne();
+        }
 
         let test1 = await Student.addStudent(Student({ name: "Test1" }));
         let test2 = await Student.addStudent(Student({ name: "Test2" }));
