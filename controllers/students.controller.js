@@ -11,7 +11,7 @@ controller.getAll = async (req, res) => {
         res.send(students);
     }
     catch (err) {
-        logger.error(`Error in getting students- ${err}`);
+        logger.error(`Error in getting students - ${err}`);
         res.send('Got error in getAll');
     }
 }
@@ -24,7 +24,7 @@ controller.getById = async (req, res) => {
         res.send(student);
     }
     catch (err) {
-        logger.error(`Error in getting student- ${err}`);
+        logger.error(`Error in getting student - ${err}`);
         res.send('Got error in getById');
     }
 }
@@ -39,7 +39,7 @@ controller.addStudent = async (req, res) => {
         res.send(savedStudent);
     }
     catch (err) {
-        logger.error(`Error in adding student- ${err}`);
+        logger.error(`Error in adding student - ${err}`);
         res.send('Got error in addStudent');
     }
 }
@@ -49,20 +49,17 @@ controller.updateStudent = async (req, res) => {
     try {
 
         const findStudent = await Student.getById(studentId);
+        if (!findStudent)
+            throw new Error(`Student with id:${studentId} not found`);
 
-        if (!findStudent) {
-            logger.info(`Student with id:${studentId} not found`);
-            res.send('Student not found');
-        }
-        else {
-            Object.assign(findStudent, req.body);
-            await findStudent.save();
-            logger.info(`Update Student- ${findStudent}`);
-            res.send('Student successfully updated');
-        }
+        Object.assign(findStudent, req.body);
+        await findStudent.save();
+        logger.info(`Update Student- ${findStudent}`);
+        res.send(findStudent);
+
     }
     catch (err) {
-        logger.error(`Failed to update student- ${err}`);
+        logger.error(`Update student- ${err}`);
         res.send('Got error in updateStudent');
     }
 }
@@ -72,19 +69,16 @@ controller.deleteStudent = async (req, res) => {
     try {
 
         const findStudent = await Student.getById(studentId);
+        if (!findStudent)
+            throw new Error(`Student with id:${studentId} not found`);
 
-        if (!findStudent) {
-            logger.info(`Student with id:${studentId} not found`);
-            res.send('Student not found');
-        }
-        else {
-            const removedStudent = await Student.removeStudent(studentId);
-            logger.info(`Deleted Student- ${removedStudent}`);
-            res.send('Student successfully deleted');
-        }
+        const removedStudent = await Student.removeStudent(studentId);
+        logger.info(`Deleted Student- ${removedStudent}`);
+        res.send('Student successfully deleted');
+
     }
     catch (err) {
-        logger.error(`Failed to delete student- ${err}`);
+        logger.error(`Delete student - ${err}`);
         res.send('Got error in deleteStudent');
     }
 }
@@ -95,16 +89,12 @@ controller.assignCourse = async (req, res) => {
     try {
 
         const findStudent = await Student.getById(studentId);
-        if (!findStudent) {
-            logger.info(`Student with id:${studentId} not found`);
-            return res.send('Student not found');
-        }
+        if (!findStudent)
+            throw new Error(`Student with id:${studentId} not found`);
 
         const findCourse = await Course.getById(courseId);
-        if (!findCourse) {
-            logger.info(`Course with id:${courseId} not found`);
-            return res.send('Course not found');
-        }
+        if (!findCourse)
+            throw new Error(`Course with id:${courseId} not found`);
 
         const updatedStudent = await Student.findOneAndUpdate({ _id: findStudent._id },
             { $push: { courses: { courseId: findCourse._id } } },
@@ -113,7 +103,7 @@ controller.assignCourse = async (req, res) => {
         res.send(updatedStudent);
     }
     catch (err) {
-        logger.error(`Failed to assign course- ${err}`);
+        logger.error(`Assign course - ${err}`);
         res.send('Got error in assignCourse');
     }
 }
@@ -125,16 +115,12 @@ controller.assignScore = async (req, res) => {
     try {
 
         const findStudent = await Student.getById(studentId);
-        if (!findStudent) {
-            logger.info(`Student with id:${studentId} not found`);
-            return res.send('Student not found');
-        }
+        if (!findStudent)
+            throw new Error(`Student with id:${studentId} not found`);
 
         const findCourse = await Course.getById(courseId);
-        if (!findCourse) {
-            logger.info(`Course with id:${courseId} not found`);
-            return res.send('Course not found');
-        }
+        if (!findCourse)
+            throw new Error(`Course with id:${courseId} not found`);
 
         const updatedStudent = await Student.findOneAndUpdate({ _id: findStudent._id, "courses.courseId": findCourse._id },
             { $set: { "courses.$.score": score } },
@@ -143,7 +129,7 @@ controller.assignScore = async (req, res) => {
         res.send(updatedStudent);
     }
     catch (err) {
-        logger.error(`Failed to assign score- ${err}`);
+        logger.error(`Assign score - ${err}`);
         res.send('Got error in assignScore');
     }
 }

@@ -46,22 +46,17 @@ controller.addCourse = async (req, res) => {
 controller.updateCourse = async (req, res) => {
     const courseId = req.params.id;
     try {
-
         const findCourse = await Course.getById(courseId);
+        if (!findCourse)
+            throw new Error(`Course with id:${courseId} not found`);
 
-        if (!findCourse) {
-            logger.info(`Course with id:${courseId} not found`);
-            res.send('Course not found');
-        }
-        else {
-            Object.assign(findCourse, req.body);
-            await findCourse.save();
-            logger.info(`Update Course- ${findCourse}`);
-            res.send('Course successfully updated');
-        }
+        Object.assign(findCourse, req.body);
+        await findCourse.save();
+        logger.info(`Update Course- ${findCourse}`);
+        res.send(findCourse);
     }
     catch (err) {
-        logger.error(`Failed to update course- ${err}`);
+        logger.error(`Update course - ${err}`);
         res.send('Got error in updateCourse');
     }
 }
@@ -71,19 +66,15 @@ controller.deleteCourse = async (req, res) => {
     try {
 
         const findCourse = await Course.getById(courseId);
+        if (!findCourse)
+            throw new Error(`Course with id:${courseId} not found`);
 
-        if (!findCourse) {
-            logger.info(`Course with id:${courseId} not found`);
-            res.send('Course not found');
-        }
-        else {
-            const removedCourse = await Course.removeCourse(courseId);
-            logger.info(`Deleted Course- ${removedCourse}`);
-            res.send('Course successfully deleted');
-        }
+        const removedCourse = await Course.removeCourse(courseId);
+        logger.info(`Deleted Course- ${removedCourse}`);
+        res.send('Course successfully deleted');
     }
     catch (err) {
-        logger.error(`Failed to delete course- ${err}`);
+        logger.error(`Delete course - ${err}`);
         res.send('Got error in deleteCourse');
     }
 }
