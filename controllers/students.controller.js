@@ -123,23 +123,11 @@ controller.assignScore = async (req, res) => {
     const courseId = req.body.courseId;
     const score = req.body.score;
     try {
+        const updatedStudent = await Student.findOneAndUpdate({ _id: studentId, "courses.courseId": mongoose.Types.ObjectId(courseId) },
+            { $set: { "courses.$.score": score } },
+            { new: true });
 
-        const findStudent = await Student.getById(studentId);
-        if (!findStudent) {
-            logger.info(`Student with id:${studentId} not found`);
-            res.send('Student not found');
-        }
-
-        const findCourse = await Course.getById(courseId);
-        if (!findCourse) {
-            logger.info(`Course with id:${courseId} not found`);
-            res.send('Course not found');
-        }
-
-        await Student.updateOne({ "_id": studentId, "courses.courseId": new mongoose.Types.ObjectId(courseId) },
-            { $set: { "courses.$.score": score } })
-
-        res.send(`added score: ${score} to courseId: ${courseId}`);
+        res.send(updatedStudent);
     }
     catch (err) {
         logger.error(`Failed to assign score- ${err}`);
