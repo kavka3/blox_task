@@ -24,7 +24,7 @@ controller.getById = async (req, res) => {
         res.send(student);
     }
     catch (err) {
-        logger.error('Error in getting student- ' + err);
+        logger.error(`Error in getting student- ${err}`);
         res.send('Got error in getById');
     }
 }
@@ -84,7 +84,7 @@ controller.deleteStudent = async (req, res) => {
         }
     }
     catch (err) {
-        logger.error('Failed to delete student- ' + err);
+        logger.error(`Failed to delete student- ${err}`);
         res.send('Got error in deleteStudent');
     }
 }
@@ -95,12 +95,16 @@ controller.assignCourse = async (req, res) => {
     try {
 
         const findStudent = await Student.getById(studentId);
-        if (!findStudent)
+        if (!findStudent) {
             logger.info(`Student with id:${studentId} not found`);
+            return res.send('Student not found');
+        }
 
         const findCourse = await Course.getById(courseId);
-        if (!findCourse)
+        if (!findCourse) {
             logger.info(`Course with id:${courseId} not found`);
+            return res.send('Course not found');
+        }
 
         const updatedStudent = await Student.findOneAndUpdate({ _id: findStudent._id },
             { $push: { courses: { courseId: findCourse._id } } },
@@ -119,14 +123,18 @@ controller.assignScore = async (req, res) => {
     const courseId = req.body.courseId;
     const score = req.body.score;
     try {
-        
+
         const findStudent = await Student.getById(studentId);
-        if (!findStudent)
+        if (!findStudent) {
             logger.info(`Student with id:${studentId} not found`);
+            return res.send('Student not found');
+        }
 
         const findCourse = await Course.getById(courseId);
-        if (!findCourse)
+        if (!findCourse) {
             logger.info(`Course with id:${courseId} not found`);
+            return res.send('Course not found');
+        }
 
         const updatedStudent = await Student.findOneAndUpdate({ _id: findStudent._id, "courses.courseId": findCourse._id },
             { $set: { "courses.$.score": score } },
