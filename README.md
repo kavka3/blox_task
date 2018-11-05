@@ -33,7 +33,7 @@ Use postman collection
 blox.postman_collection.json
 ```
 
-MokeData
++ mokedata
 
 ```
 Post http://localhost:3000/students/mokedata
