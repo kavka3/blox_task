@@ -33,85 +33,89 @@ Use postman collection
 blox.postman_collection.json
 ```
 
-+ mokedata
+*  **mokedata**
 ```
 POST http://localhost:3000/students/mokedata
 ```
 *  **Create student**
 
    **Required:**
-   
+
    `name=[string]`
 ```
 POST http://localhost:3000/students
 ```
-
-+ Get all students
+*  **Get all students**
 ```
 GET http://localhost:3000/students
 ```
 
-+ Get student by Id
+*  **Get student by Id**
 ```
 GET http://localhost:3000/students/{id}
 ```
 
-+ Update student by Id
+*  **Update student by Id**
 ```
 PUT http://localhost:3000/students/{id}
 ```
 
-+ Delete student by Id
+*  **Delete student by Id**
 ```
 DELETE http://localhost:3000/students/{id}
 ```
 
-+ Create course
+*  **Create course**
 
---name required
+   **Required:**
+
+   `name=[string]`
 ```
 POST http://localhost:3000/courses
 ```
 
-+ Get all courses
+*  **Get all courses**
 ```
 GET http://localhost:3000/courses
 ```
 
-+ Get course by Id
+*  **Get course by Id**
 ```
 GET http://localhost:3000/courses/{id}
 ```
 
-+ Update course by Id
+*  **Update course by Id**
 ```
 PUT http://localhost:3000/courses/{id}
 ```
 
-+ Delete course by Id
+*  **Delete course by Id**
 ```
 DELETE http://localhost:3000/courses/{id}
 ```
 
-+ Assign student to course
+*  **Assign student to course**
 
---studentId required
+   **Required:**
 
---courseId required
+   `studentId=[ObjectId]`
+   `courseId=[ObjectId]`
 ```
 POST http://localhost:3000/students/assigncourse
 ```
 
+*  **Assign score to course**
+
+   **Required:**
+
+   `studentId=[ObjectId]`
+   `courseId=[ObjectId]`
 + Assign score to course
-
---studentId required
-
---courseId required
 ```
 POST http://localhost:3000/students/assignscore
 ```
 
-+ Get a list of outstanding students (average > 90)
+*  **Get a list of outstanding students (average > 90)**
 ```
 POST http://localhost:3000/students/outstanding
 ```
