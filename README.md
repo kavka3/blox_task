@@ -39,8 +39,9 @@ POST http://localhost:3000/students/mokedata
 ```
 
 + Create student
-
---name required
+   **Required:**
+ 
+   `name=[string]`
 ```
 POST http://localhost:3000/students
 ```
