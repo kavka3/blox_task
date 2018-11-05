@@ -183,4 +183,74 @@ controller.outstanding = async (req, res) => {
     }
 }
 
+controller.mokeData = async (req, res) => {
+    try {
+
+        let test1 = await Student.addStudent(Student({ name: "Test1" }));
+        let test2 = await Student.addStudent(Student({ name: "Test2" }));
+        let test3 = await Student.addStudent(Student({ name: "Test3" }));
+
+        let course1 = await Course.addCourse(Course({ name: "Course1" }));
+        let course2 = await Course.addCourse(Course({ name: "Course2" }));
+        let course3 = await Course.addCourse(Course({ name: "Course3" }));
+
+        test1 = await Student.findOneAndUpdate({ _id: test1._id },
+            { $push: { courses: { courseId: course1._id } } },
+            { new: true });
+
+        test1 = await Student.findOneAndUpdate({ _id: test1._id },
+            { $push: { courses: { courseId: course2._id } } },
+            { new: true });
+
+        test1 = await Student.findOneAndUpdate({ _id: test1._id },
+            { $push: { courses: { courseId: course3._id } } },
+            { new: true });
+
+
+        test2 = await Student.findOneAndUpdate({ _id: test2._id },
+            { $push: { courses: { courseId: course1._id } } },
+            { new: true });
+
+        test2 = await Student.findOneAndUpdate({ _id: test2._id },
+            { $push: { courses: { courseId: course3._id } } },
+            { new: true });
+
+
+        test3 = await Student.findOneAndUpdate({ _id: test3._id },
+            { $push: { courses: { courseId: course2._id } } },
+            { new: true });
+
+        test3 = await Student.findOneAndUpdate({ _id: test3._id },
+            { $push: { courses: { courseId: course3._id } } },
+            { new: true });
+
+        test1 = await Student.findOneAndUpdate({ _id: test1._id, "courses.courseId": course1._id },
+            { $set: { "courses.$.score": 89 } },
+            { new: true });
+
+        test1 = await Student.findOneAndUpdate({ _id: test1._id, "courses.courseId": course2._id },
+            { $set: { "courses.$.score": 91 } },
+            { new: true });
+
+
+        test2 = await Student.findOneAndUpdate({ _id: test2._id, "courses.courseId": course1._id },
+            { $set: { "courses.$.score": 77 } },
+            { new: true });
+        test2 = await Student.findOneAndUpdate({ _id: test2._id, "courses.courseId": course3._id },
+            { $set: { "courses.$.score": 95 } },
+            { new: true });
+
+
+        test3 = await Student.findOneAndUpdate({ _id: test3._id, "courses.courseId": course3._id },
+            { $set: { "courses.$.score": 100 } },
+            { new: true });
+
+        res.send('moke data');
+    }
+    catch (err) {
+        logger.error(`Error in mokedata- ${err}`);
+        res.send('Got error in mokeData');
+    }
+}
+
 export default controller;

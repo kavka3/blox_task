@@ -34,4 +34,8 @@ router.post('/outstanding', (req, res) => {
     studentController.outstanding(req, res);
 });
 
+router.post('/mokedata', (req, res) => {
+    studentController.mokeData(req, res);
+});
+
 export default router;
