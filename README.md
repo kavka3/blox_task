@@ -35,10 +35,31 @@ blox.postman_collection.json
 
 + mokedata
 ```
-Post http://localhost:3000/students/mokedata
+POST http://localhost:3000/students/mokedata
 ```
+
++ Create student
+```
+POST http://localhost:3000/students
+```
+--name required
 
 + Get all students
 ```
-Get http://localhost:3000/students
+GET http://localhost:3000/students
+```
+
++ Get student by Id
+```
+GET http://localhost:3000/students/{id}
+```
+
++ Update student by Id
+```
+PUT http://localhost:3000/students/{id}
+```
+
++ Delete student by Id
+```
+DELETE http://localhost:3000/students/{id}
 ```
