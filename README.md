@@ -38,7 +38,9 @@ blox.postman_collection.json
 POST http://localhost:3000/students/mokedata
 ```
 *  **Create student**
+
    **Required:**
+   
    `name=[string]`
 ```
 POST http://localhost:3000/students
