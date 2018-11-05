@@ -418,6 +418,30 @@
 				"description": "By ObjectId"
 			},
 			"response": []
+		},
+		{
+			"name": "Mokedata",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/students/mokedata",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"students",
+						"mokedata"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
