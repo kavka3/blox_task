@@ -32,3 +32,9 @@ Use postman collection
 ```
 blox.postman_collection.json
 ```
+
+MokeData
+
+```
+Post http://localhost:3000/students/mokedata
+```
