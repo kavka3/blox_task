@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 
 const StudentSchema = mongoose.Schema({
     name: { type: String, required: true, index: true },
-    courses: {type: []},
+    courses: {type: [{
+        courseId: mongoose.Types.ObjectId,
+        score: Number
+    }]},
     createdDate: { type: Date, default: Date.now },
     updateDate: { type: Date, default: Date.now }
 }, { collection: 'Student' });

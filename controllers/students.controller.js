@@ -124,11 +124,6 @@ controller.assignScore = async (req, res) => {
     const score = req.body.score;
     try {
 
-        if (!score || isNaN(Math.trunc(score))) {
-            logger.info(`Score undefined`);
-            res.send('Score undefined');
-        }
-
         const findStudent = await Student.getById(studentId);
         if (!findStudent) {
             logger.info(`Student with id:${studentId} not found`);
@@ -142,7 +137,7 @@ controller.assignScore = async (req, res) => {
         }
 
         await Student.updateOne({ "_id": studentId, "courses.courseId": new mongoose.Types.ObjectId(courseId) },
-            { $set: { "courses.$.score": Math.trunc(score) } })
+            { $set: { "courses.$.score": score } })
 
         res.send(`added score: ${score} to courseId: ${courseId}`);
     }
