@@ -34,65 +34,67 @@ blox.postman_collection.json
 ```
 
 *  **mokedata**
-```
-POST http://localhost:3000/students/mokedata
-```
+    ```
+    POST http://localhost:3000/students/mokedata
+    ```
+
 *  **Create student**
 
    **Required:**
 
    `name=[string]`
-```
-POST http://localhost:3000/students
-```
+    ```
+    POST http://localhost:3000/students
+    ```
+
 *  **Get all students**
-```
-GET http://localhost:3000/students
-```
+    ```
+    GET http://localhost:3000/students
+    ```
 
 *  **Get student by Id**
-```
-GET http://localhost:3000/students/{id}
-```
+    ```
+    GET http://localhost:3000/students/{id}
+    ```
 
 *  **Update student by Id**
-```
-PUT http://localhost:3000/students/{id}
-```
+    ```
+    PUT http://localhost:3000/students/{id}
+    ```
 
 *  **Delete student by Id**
-```
-DELETE http://localhost:3000/students/{id}
-```
+    ```
+    DELETE http://localhost:3000/students/{id}
+    ```
 
 *  **Create course**
 
    **Required:**
 
    `name=[string]`
-```
-POST http://localhost:3000/courses
-```
+    ```
+    POST http://localhost:3000/courses
+    ```
 
 *  **Get all courses**
-```
-GET http://localhost:3000/courses
-```
+    ```
+    GET http://localhost:3000/courses
+    ```
 
 *  **Get course by Id**
-```
-GET http://localhost:3000/courses/{id}
-```
+    ```
+    GET http://localhost:3000/courses/{id}
+    ```
 
 *  **Update course by Id**
-```
-PUT http://localhost:3000/courses/{id}
-```
+    ```
+    PUT http://localhost:3000/courses/{id}
+    ```
 
 *  **Delete course by Id**
-```
-DELETE http://localhost:3000/courses/{id}
-```
+    ```
+    DELETE http://localhost:3000/courses/{id}
+    ```
 
 *  **Assign student to course**
 
@@ -100,23 +102,22 @@ DELETE http://localhost:3000/courses/{id}
 
    `studentId=[ObjectId]`
    `courseId=[ObjectId]`
-```
-POST http://localhost:3000/students/assigncourse
-```
+    ```
+    POST http://localhost:3000/students/assigncourse
+    ```
 
 *  **Assign score to course**
 
-   **Required:**
+    **Required:**
 
    `studentId=[ObjectId]`
    `courseId=[ObjectId]`
-+ Assign score to course
-```
-POST http://localhost:3000/students/assignscore
-```
+    ```
+    POST http://localhost:3000/students/assignscore
+    ```
 
 *  **Get a list of outstanding students (average > 90)**
-```
-POST http://localhost:3000/students/outstanding
-```
+    ```
+    POST http://localhost:3000/students/outstanding
+    ```
 
