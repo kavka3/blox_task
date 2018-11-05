@@ -34,7 +34,11 @@ blox.postman_collection.json
 ```
 
 + mokedata
-
 ```
 Post http://localhost:3000/students/mokedata
+```
+
++ Get all students
+```
+Get http://localhost:3000/students
 ```
