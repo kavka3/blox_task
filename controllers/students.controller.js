@@ -142,30 +142,11 @@ controller.assignScore = async (req, res) => {
 
 controller.outstanding = async (req, res) => {
     try {
-        const students = await Student.getAll();
-        let outstanding = [];
-
-        students.forEach(function (student) {
-
-            let sumScore = 0;
-            let countEndedCorses = 0;
-
-            student.courses.forEach(function (course) {
-                sumScore += course.score ? course.score : 0;
-                countEndedCorses += course.score ? 1 : 0;
-            });
-
-            logger.info(`sumscore: ${sumScore}, countEndedCorses: ${countEndedCorses}`);
-
-            const avg = countEndedCorses != 0 ? sumScore / countEndedCorses : 0;
-
-            if (avg >= 90) {
-                outstanding.push({
-                    name: student.name,
-                    avg: avg
-                })
-            }
-        });
+        const outstanding = await Student.aggregate([
+            { $unwind: '$courses' },
+            { $group: { _id: '$_id', name: { $first: '$name' }, avg: { $avg: '$courses.score' } } },
+            { $match: { 'avg': { $gt: 89 } } }
+        ]);
 
         res.send(outstanding);
     }
