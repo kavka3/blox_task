@@ -33,7 +33,8 @@ Use postman collection
 blox.postman_collection.json
 ```
 
-*  **mokedata**
+*  **Create moke data**
+    Be aware: drops all collections. 
     ```
     POST http://localhost:3000/students/mokedata
     ```
